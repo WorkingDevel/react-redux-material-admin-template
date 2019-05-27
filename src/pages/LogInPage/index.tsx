@@ -8,13 +8,17 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import withStyles from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import {AdapterLink} from "../../utils";
+import {AppState} from "../../store";
+import {SystemState} from "../../store/system/types";
+import {updateLogin} from "../../store/system/actions";
+import {Dispatch} from "redux";
+import {connect} from "react-redux";
 
 const styles = (theme: Theme) => createStyles({
   '@global': {
@@ -41,11 +45,40 @@ const styles = (theme: Theme) => createStyles({
   },
 });
 
+const mapStateToProps = (state: AppState) => ({
+  system: state.system
+});
 
-class LogInPage extends React.Component<WithStyles<typeof styles>> {
+const mapDispatchToProps = (dispatch: Dispatch, ownProps: LogInPageOwnProps): LogInPageDispatchProps => {
+  return {
+    onLoginClick: () => {
+      dispatch(updateLogin({
+        loggedIn: true,
+        userName: "dummy",
+        session: "dummySession"
+      }))
+    }
+  }
+};
+
+interface LogInPageStateProps {
+  system: SystemState
+}
+
+interface LogInPageDispatchProps {
+  onLoginClick: () => void
+}
+
+interface LogInPageOwnProps {
+
+}
+
+type LogInPageProps = LogInPageStateProps & LogInPageDispatchProps & LogInPageOwnProps & WithStyles<typeof styles>;
+
+class LogInPage extends React.Component<LogInPageProps> {
 
   render() {
-    const {classes} = this.props;
+    const {classes, onLoginClick} = this.props;
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline/>
@@ -91,6 +124,7 @@ class LogInPage extends React.Component<WithStyles<typeof styles>> {
               className={classes.submit}
               component={AdapterLink}
               to="/"
+              onClick={onLoginClick}
             >
               Sign In
             </Button>
@@ -113,4 +147,9 @@ class LogInPage extends React.Component<WithStyles<typeof styles>> {
   }
 }
 
-export default withStyles(styles)(LogInPage)
+export default withStyles(styles)(
+  connect<LogInPageStateProps, LogInPageDispatchProps, LogInPageOwnProps, AppState>(
+    mapStateToProps,
+    mapDispatchToProps
+  )(LogInPage)
+)
