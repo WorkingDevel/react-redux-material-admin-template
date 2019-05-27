@@ -89,7 +89,6 @@ type LogInPageProps = LogInPageStateProps & LogInPageDispatchProps & LogInPageOw
 
 class LogInPage extends React.Component<LogInPageProps> {
 
-
   constructor(props: any) {
     super(props);
     this.onFormikSubmit = this.onFormikSubmit.bind(this);

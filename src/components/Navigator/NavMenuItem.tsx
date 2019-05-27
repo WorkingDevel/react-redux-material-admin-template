@@ -5,19 +5,42 @@ import ListItemText from "@material-ui/core/ListItemText";
 import {withStyles, WithStyles} from "@material-ui/core";
 import clsx from "clsx";
 import {navigatorStyles} from "../../theme";
+import {Dispatch} from "redux";
+import {setActiveNavItem} from "../../store/adminHtml/actions";
+import {connect} from "react-redux";
+import {AppState} from "../../store";
 
-interface NavMenuItemProps extends WithStyles<typeof navigatorStyles> {
+interface NavMenuItemOwnProps {
   title: string;
-  id?: string;
+  id: string;
   active?: boolean;
   icon: React.ReactElement;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
+interface NavMenuItemDispatchProps {
+  onItemClick: (id: string) => void
+}
+
+type NavMenuItemProps = WithStyles<typeof navigatorStyles> & NavMenuItemOwnProps & NavMenuItemDispatchProps;
+
 class NavMenuItem extends React.Component<NavMenuItemProps> {
 
+  constructor(props: any) {
+    super(props);
+    this.onClick = this.onClick.bind(this);
+  }
+
+  onClick(event: React.MouseEvent<HTMLElement>): void {
+    if (this.props.onClick !== undefined) {
+      this.props.onClick!(event);
+    }
+    this.props.onItemClick(this.props.id);
+    event.preventDefault();
+  }
+
   render() {
-    let {title, id, active, icon, classes, onClick} = this.props;
+    let {title, id, active, icon, classes} = this.props;
 
     return (
       <ListItem
@@ -29,7 +52,7 @@ class NavMenuItem extends React.Component<NavMenuItemProps> {
           active && classes.itemActiveItem,
         )}
         key={id !== null ? id : title}
-        onClick={onClick === null ? (event: React.MouseEvent<HTMLElement>) => (event.preventDefault()) : onClick}
+        onClick={this.onClick}
       >
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText
@@ -46,4 +69,17 @@ class NavMenuItem extends React.Component<NavMenuItemProps> {
   }
 }
 
-export default withStyles(navigatorStyles)(NavMenuItem);
+const mapDispatchToProps = (dispatch: Dispatch, ownProps: NavMenuItemOwnProps): NavMenuItemDispatchProps => {
+  return {
+    onItemClick: (id: string) => {
+      dispatch(setActiveNavItem(id))
+    }
+  }
+};
+
+export default withStyles(navigatorStyles)(
+  connect<null, NavMenuItemDispatchProps, NavMenuItemOwnProps, AppState>(
+    null,
+    mapDispatchToProps
+  )(NavMenuItem)
+);
