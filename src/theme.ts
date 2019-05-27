@@ -1,22 +1,214 @@
-import red from '@material-ui/core/colors/red';
-import {createMuiTheme} from '@material-ui/core/styles';
+import {createMuiTheme, createStyles, Theme} from '@material-ui/core/styles';
 
-// A custom theme for this app
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#556cd6',
-    },
-    secondary: {
-      main: '#19857b',
-    },
-    error: {
-      main: red.A400,
-    },
-    background: {
-      default: '#fff',
+const lightColor = 'rgba(255, 255, 255, 0.7)';
+export const drawerWidth = 256;
+
+export let theme = createMuiTheme({
+  typography: {
+    h5: {
+      fontWeight: 500,
+      fontSize: 26,
+      letterSpacing: 0.5,
     },
   },
+  palette: {
+    primary: {
+      light: '#63ccff',
+      main: '#009be5',
+      dark: '#006db3',
+    },
+  },
+  shape: {
+    borderRadius: 8,
+  },
+});
+
+theme = {
+  ...theme,
+  overrides: {
+    MuiDrawer: {
+      paper: {
+        backgroundColor: '#18202c',
+      },
+    },
+    MuiButton: {
+      label: {
+        textTransform: 'none',
+      },
+      contained: {
+        boxShadow: 'none',
+        '&:active': {
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiTabs: {
+      root: {
+        marginLeft: theme.spacing(1),
+      },
+      indicator: {
+        height: 3,
+        borderTopLeftRadius: 3,
+        borderTopRightRadius: 3,
+        backgroundColor: theme.palette.common.white,
+      },
+    },
+    MuiTab: {
+      root: {
+        textTransform: 'none',
+        margin: '0 16px',
+        minWidth: 0,
+        padding: 0,
+        [theme.breakpoints.up('md')]: {
+          padding: 0,
+          minWidth: 0,
+        },
+      },
+    },
+    MuiIconButton: {
+      root: {
+        padding: theme.spacing(1),
+      },
+    },
+    MuiTooltip: {
+      tooltip: {
+        borderRadius: 4,
+      },
+    },
+    MuiDivider: {
+      root: {
+        backgroundColor: '#404854',
+      },
+    },
+    MuiListItemText: {
+      primary: {
+        fontWeight: theme.typography.fontWeightMedium,
+      },
+    },
+    MuiListItemIcon: {
+      root: {
+        color: 'inherit',
+        marginRight: 0,
+        '& svg': {
+          fontSize: 20,
+        },
+      },
+    },
+    MuiAvatar: {
+      root: {
+        width: 32,
+        height: 32,
+      },
+    },
+  },
+  props: {
+    MuiTab: {
+      disableRipple: true,
+    },
+  },
+  mixins: {
+    ...theme.mixins,
+    toolbar: {
+      minHeight: 48,
+    },
+  },
+};
+
+
+export const styles = (theme: Theme) => createStyles({
+  root: {
+    display: 'flex',
+    minHeight: '100vh',
+  },
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+  },
+  appContent: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  mainContent: {
+    flex: 1,
+    padding: '48px 36px 0',
+    background: '#eaeff1',
+  },
+});
+
+export const navigatorStyles = (theme: Theme) => createStyles({
+  categoryHeader: {
+    paddingTop: 16,
+    paddingBottom: 16,
+  },
+  categoryHeaderPrimary: {
+    color: theme.palette.common.white,
+  },
+  item: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    color: 'rgba(255, 255, 255, 0.7)',
+  },
+  itemCategory: {
+    backgroundColor: '#232f3e',
+    boxShadow: '0 -1px 0 #404854 inset',
+    paddingTop: 16,
+    paddingBottom: 16,
+  },
+  firebase: {
+    fontSize: 24,
+    fontFamily: theme.typography.fontFamily,
+    color: theme.palette.common.white,
+  },
+  itemActionable: {
+    '&:hover': {
+      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    },
+  },
+  itemActiveItem: {
+    color: '#4fc3f7',
+  },
+  itemPrimary: {
+    color: 'inherit',
+    fontSize: theme.typography.fontSize,
+    '&$textDense': {
+      fontSize: theme.typography.fontSize,
+    },
+  },
+  textDense: {},
+  divider: {
+    marginTop: theme.spacing(2),
+  },
+});
+
+export const headerStyles = (theme: Theme) => createStyles({
+  secondaryBar: {
+    zIndex: 0,
+  },
+  menuButton: {
+    marginLeft: -theme.spacing(1),
+  },
+  iconButtonAvatar: {
+    padding: 0,
+    size: '50px'
+  },
+  link: {
+    textDecoration: 'none',
+    color: lightColor,
+    '&:hover': {
+      color: theme.palette.common.white,
+    },
+  },
+  button: {
+    borderColor: lightColor,
+  },
+  mainContent: {
+    flex: 1,
+    padding: '48px 36px 0',
+    background: '#eaeff1',
+  }
 });
 
 export default theme;

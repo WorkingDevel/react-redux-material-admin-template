@@ -9,6 +9,7 @@ import LogInPage from "./pages/LogInPage";
 import {BrowserRouter as Router} from "react-router-dom";
 import store from "./store";
 import {Provider} from "react-redux";
+import AdminHtml from "./layouts/AdminHtml";
 
 const App: React.FC = () => {
   return (
@@ -18,7 +19,9 @@ const App: React.FC = () => {
         <Router>
           <Switch>
             <Route exact path="/">
-              <HomePage/>
+              <AdminHtml pageTitle="Home">
+                <HomePage/>
+              </AdminHtml>
             </Route>
             <Route exact path="/login" component={LogInPage}/>
           </Switch>
