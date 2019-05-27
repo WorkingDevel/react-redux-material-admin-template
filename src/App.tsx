@@ -3,7 +3,7 @@ import './App.css';
 import {CssBaseline} from '@material-ui/core';
 import {ThemeProvider} from '@material-ui/styles';
 import theme from "./theme";
-import {Route, Switch} from "react-router";
+import {Redirect, Route, Switch} from "react-router";
 import HomePage from "./pages/HomePage";
 import LogInPage from "./pages/LogInPage";
 import {BrowserRouter as Router} from "react-router-dom";
@@ -18,12 +18,15 @@ const App: React.FC = () => {
         <CssBaseline/>
         <Router>
           <Switch>
+            <Route exact path="/login" component={LogInPage}/>
+            <Route exact path="/logout" render={() => (
+              <Redirect to="/"/>
+            )}/>
             <Route exact path="/">
               <AdminHtml pageTitle="Home">
                 <HomePage/>
               </AdminHtml>
             </Route>
-            <Route exact path="/login" component={LogInPage}/>
           </Switch>
         </Router>
       </ThemeProvider>

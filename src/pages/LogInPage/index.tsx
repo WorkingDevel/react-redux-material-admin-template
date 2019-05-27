@@ -13,12 +13,13 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import withStyles from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
-import {AdapterLink} from "../../utils";
 import {AppState} from "../../store";
 import {SystemState} from "../../store/system/types";
 import {updateLogin} from "../../store/system/actions";
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
+import {Formik, FormikActions, FormikProps} from "formik";
+import {Redirect} from "react-router";
 
 const styles = (theme: Theme) => createStyles({
   '@global': {
@@ -51,10 +52,10 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch, ownProps: LogInPageOwnProps): LogInPageDispatchProps => {
   return {
-    onLoginClick: () => {
+    onLoginClick: (username: string) => {
       dispatch(updateLogin({
         loggedIn: true,
-        userName: "dummy",
+        userName: username,
         session: "dummySession"
       }))
     }
@@ -66,19 +67,50 @@ interface LogInPageStateProps {
 }
 
 interface LogInPageDispatchProps {
-  onLoginClick: () => void
+  onLoginClick: (username: string) => void
 }
 
 interface LogInPageOwnProps {
 
 }
 
+interface MyFormValues {
+  email: string;
+  password: string;
+}
+
+interface Values {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 type LogInPageProps = LogInPageStateProps & LogInPageDispatchProps & LogInPageOwnProps & WithStyles<typeof styles>;
 
 class LogInPage extends React.Component<LogInPageProps> {
 
+
+  constructor(props: any) {
+    super(props);
+    this.onFormikSubmit = this.onFormikSubmit.bind(this);
+  }
+
+  onFormikSubmit(values: MyFormValues, {setSubmitting}: FormikActions<MyFormValues>): void {
+    if (values.email === "admin@cm" && values.password === "123") {
+      setTimeout(() => {
+        alert("Logged in " + JSON.stringify(values, null, 2));
+        setSubmitting(false);
+      }, 500);
+
+      this.props.onLoginClick(values.email);
+    }
+  }
+
   render() {
-    const {classes, onLoginClick} = this.props;
+    const {classes} = this.props;
+    if (this.props.system.loggedIn) {
+      return <Redirect to='/'/>;
+    }
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline/>
@@ -89,58 +121,71 @@ class LogInPage extends React.Component<LogInPageProps> {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary"/>}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              component={AdapterLink}
-              to="/"
-              onClick={onLoginClick}
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
+
+          <Formik
+            initialValues={{
+              password: '',
+              email: ''
+            }}
+            onSubmit={this.onFormikSubmit}
+            render={(formikBag: FormikProps<MyFormValues>) => (
+              <form className={classes.form} noValidate onSubmit={formikBag.handleSubmit}>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  onChange={formikBag.handleChange}
+                  onBlur={formikBag.handleBlur}
+                  value={formikBag.values.email}
+                />
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  onChange={formikBag.handleChange}
+                  onBlur={formikBag.handleBlur}
+                  value={formikBag.values.password}
+                />
+                <FormControlLabel
+                  control={<Checkbox value="remember" color="primary"/>}
+                  label="Remember me"
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Sign In
+                </Button>
+                <Grid container>
+                  <Grid item xs>
+                    <Link href="#" variant="body2">
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link href="#" variant="body2">
+                      {"Don't have an account? Sign Up"}
+                    </Link>
+                  </Grid>
+                </Grid>
+              </form>
+            )}
+          />
         </div>
       </Container>
     )

@@ -39,10 +39,18 @@ class HomePage extends React.Component<HomePageProps> {
         </AppBar>
 
         <main className={this.props.classes.mainContent}>
-          <Button color="primary" component={AdapterLink}
-                  to={this.props.system.loggedIn ? "/logout" : "/login"}>
-            {this.props.system.loggedIn ? "Log Out" : "Log In"}
-          </Button>
+          {this.props.system.loggedIn ?
+            <Button color="primary"
+                    component={AdapterLink}
+                    to="/logout">
+              Log Out
+            </Button>
+            : <Button color="primary"
+                      component={AdapterLink}
+                      to="/login">
+              Log In
+            </Button>
+          }
         </main>
       </React.Fragment>
     )
