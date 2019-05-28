@@ -9,20 +9,29 @@ import {Dispatch} from "redux";
 import {setActiveNavItem} from "../../store/adminHtml/actions";
 import {connect} from "react-redux";
 import {AppState} from "../../store";
+import {AdapterLink} from "../../utils";
 
 interface NavMenuItemOwnProps {
   title: string;
   id: string;
-  active?: boolean;
   icon: React.ReactElement;
+  href: string;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+}
+
+export interface NavMenuItemStateProps {
+  activePage: string;
 }
 
 interface NavMenuItemDispatchProps {
   onItemClick: (id: string) => void
 }
 
-type NavMenuItemProps = WithStyles<typeof navigatorStyles> & NavMenuItemOwnProps & NavMenuItemDispatchProps;
+type NavMenuItemProps =
+  WithStyles<typeof navigatorStyles>
+  & NavMenuItemOwnProps
+  & NavMenuItemStateProps
+  & NavMenuItemDispatchProps;
 
 class NavMenuItem extends React.Component<NavMenuItemProps> {
 
@@ -36,11 +45,10 @@ class NavMenuItem extends React.Component<NavMenuItemProps> {
       this.props.onClick!(event);
     }
     this.props.onItemClick(this.props.id);
-    event.preventDefault();
   }
 
   render() {
-    let {title, id, active, icon, classes} = this.props;
+    let {title, id, activePage, icon, href, classes} = this.props;
 
     return (
       <ListItem
@@ -49,10 +57,12 @@ class NavMenuItem extends React.Component<NavMenuItemProps> {
         className={clsx(
           classes.item,
           classes.itemActionable,
-          active && classes.itemActiveItem,
+          activePage === id && classes.itemActiveItem,
         )}
         key={id !== null ? id : title}
         onClick={this.onClick}
+        component={AdapterLink}
+        to={href}
       >
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText
@@ -69,6 +79,10 @@ class NavMenuItem extends React.Component<NavMenuItemProps> {
   }
 }
 
+const mapStateToProps = (state: AppState): NavMenuItemStateProps => ({
+  activePage: state.adminHtml.activePage
+});
+
 const mapDispatchToProps = (dispatch: Dispatch, ownProps: NavMenuItemOwnProps): NavMenuItemDispatchProps => {
   return {
     onItemClick: (id: string) => {
@@ -78,8 +92,8 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps: NavMenuItemOwnProps): 
 };
 
 export default withStyles(navigatorStyles)(
-  connect<null, NavMenuItemDispatchProps, NavMenuItemOwnProps, AppState>(
-    null,
+  connect<NavMenuItemStateProps, NavMenuItemDispatchProps, NavMenuItemOwnProps, AppState>(
+    mapStateToProps,
     mapDispatchToProps
   )(NavMenuItem)
 );

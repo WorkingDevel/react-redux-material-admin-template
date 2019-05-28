@@ -3,7 +3,7 @@ import {AdminHtmlActionTypes, SET_ACTIVE_NAV_ITEM, TOGGLE_MOBILE_OPEN} from "./a
 
 const initialState: AdminHtmlState = {
   mobileOpen: false,
-  activePage: "dev.auth"
+  activePage: "home"
 };
 
 export const adminHtmlReducer = (

@@ -7,6 +7,11 @@ import NavMenu from "./NavMenu";
 import {navigation} from "../../config/navigation";
 import NavMenuItem from "./NavMenuItem";
 import {DrawerProps} from "@material-ui/core/Drawer";
+import {Dispatch} from "redux";
+import {setActiveNavItem} from "../../store/adminHtml/actions";
+import {connect} from "react-redux";
+import {AppState} from "../../store";
+import {AdapterLink} from "../../utils";
 
 export interface NavigatorGroup {
   id: string,
@@ -18,8 +23,8 @@ export interface NavigatorEntry {
   id: string,
   title: string,
   icon: React.ReactElement,
+  href: string;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
-  href?: string;
 }
 
 interface NavigatorOwnProps extends WithStyles<typeof navigatorStyles> {
@@ -30,15 +35,27 @@ interface NavigatorOwnProps extends WithStyles<typeof navigatorStyles> {
 }
 
 export interface NavigatorStateProps {
-  active: string;
+  activePage: string;
 }
 
-export type NavigatorProps = NavigatorStateProps & NavigatorOwnProps & DrawerProps;
+interface NavigatorDispatchProps {
+  onItemClick: (id: string) => void
+}
+
+export type NavigatorProps = NavigatorStateProps & NavigatorOwnProps & DrawerProps & NavigatorDispatchProps;
 
 class Navigator extends React.Component<NavigatorProps> {
+  constructor(props: any) {
+    super(props);
+    this.onClick = this.onClick.bind(this);
+  }
+
+  onClick(event: React.MouseEvent<HTMLElement>): void {
+    this.props.onItemClick("home");
+  }
 
   render() {
-    const {title, subTitle, variant, classes, active, ...other} = this.props;
+    const {title, subTitle, variant, classes, activePage, onItemClick, ...other} = this.props;
     return (
       <Drawer variant={variant} {...other}>
         <List disablePadding>
@@ -49,8 +66,12 @@ class Navigator extends React.Component<NavigatorProps> {
             {title}
           </ListItem>
           <ListItem
-            className={clsx(classes.item, classes.itemCategory)}
+            button
+            className={clsx(classes.item, classes.itemCategory, activePage === "home" && classes.itemActiveItem)}
             key="2"
+            onClick={this.onClick}
+            component={AdapterLink}
+            to="/"
           >
             <ListItemIcon>
               <HomeIcon/>
@@ -66,14 +87,14 @@ class Navigator extends React.Component<NavigatorProps> {
           {navigation.map(({id, title, entries}) => (
             <React.Fragment key={id}>
               <NavMenu title={title} id={id}>
-                {entries.map(({id: childId, icon, title, onClick}) => (
+                {entries.map(({id: childId, icon, title, onClick, href}) => (
                   <React.Fragment key={childId}>
                     <NavMenuItem
                       title={title}
                       id={childId}
-                      active={childId === active}
                       icon={icon}
                       onClick={onClick}
+                      href={href}
                     >
                     </NavMenuItem>
                   </React.Fragment>
@@ -87,5 +108,21 @@ class Navigator extends React.Component<NavigatorProps> {
   }
 }
 
+const mapDispatchToProps = (dispatch: Dispatch, ownProps: NavigatorOwnProps): NavigatorDispatchProps => {
+  return {
+    onItemClick: (id: string) => {
+      dispatch(setActiveNavItem(id))
+    }
+  }
+};
 
-export default withStyles(navigatorStyles)(Navigator)
+const mapStateToProps = (state: AppState): NavigatorStateProps => ({
+  activePage: state.adminHtml.activePage
+});
+
+export default withStyles(navigatorStyles)(
+  connect<NavigatorStateProps, NavigatorDispatchProps, NavigatorOwnProps, AppState>(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Navigator)
+);

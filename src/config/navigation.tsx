@@ -19,22 +19,22 @@ export const navigation: Array<NavigatorGroup> = [
         id: 'dev.auth',
         title: 'Authentication',
         icon: <PeopleIcon/>,
-        onClick: (event: React.MouseEvent<HTMLElement>) => (console.log('browse'))
+        href: "/auth"
       },
-      {id: 'dev.db', title: 'Database', icon: <DnsRoundedIcon/>},
-      {id: 'dev.storage', title: 'Storage', icon: <PermMediaOutlinedIcon/>},
-      {id: 'dev.hosting', title: 'Hosting', icon: <PublicIcon/>},
-      {id: 'dev.functions', title: 'Functions', icon: <SettingsEthernetIcon/>},
-      {id: 'dev.mlkit', title: 'ML Kit', icon: <SettingsInputComponentIcon/>}
+      {id: 'dev.db', title: 'Database', icon: <DnsRoundedIcon/>, href: "/dev/db"},
+      {id: 'dev.storage', title: 'Storage', icon: <PermMediaOutlinedIcon/>, href: "/dev/storage"},
+      {id: 'dev.hosting', title: 'Hosting', icon: <PublicIcon/>, href: "/dev/hosting"},
+      {id: 'dev.functions', title: 'Functions', icon: <SettingsEthernetIcon/>, href: "/dev/functions"},
+      {id: 'dev.mlkit', title: 'ML Kit', icon: <SettingsInputComponentIcon/>, href: "/dev/mlkit"}
     ],
   },
   {
     id: 'qm',
     title: 'Quality',
     entries: [
-      {id: 'qm.analytics', title: 'Analytics', icon: <SettingsIcon/>},
-      {id: 'qm.performance', title: 'Performance', icon: <TimerIcon/>},
-      {id: 'qm.lab', title: 'Test Lab', icon: <PhonelinkSetupIcon/>},
+      {id: 'qm.analytics', title: 'Analytics', icon: <SettingsIcon/>, href: "/qm/analytics"},
+      {id: 'qm.performance', title: 'Performance', icon: <TimerIcon/>, href: "/qm/performance"},
+      {id: 'qm.lab', title: 'Test Lab', icon: <PhonelinkSetupIcon/>, href: "/qm/lab"},
     ],
   },
 ];

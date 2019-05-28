@@ -100,7 +100,12 @@ class AdminHeader extends React.Component<AdminHeaderProps> {
                   </IconButton>
                 </Grid>
               </Hidden>
-              <Grid item xs/>
+              <Grid item xs>
+                <Typography color="inherit" variant="h5">
+                  {title}
+                </Typography>
+              </Grid>
+
               <Grid item>
                 <Typography className={classes.link}>
                   Go to docs
@@ -113,16 +118,13 @@ class AdminHeader extends React.Component<AdminHeaderProps> {
         <AppBar
           component="div"
           className={classes.secondaryBar}
-          color="primary"
+          color="secondary"
           position="static"
           elevation={0}
         >
           <Toolbar>
             <Grid container alignItems="center" spacing={1}>
               <Grid item xs>
-                <Typography color="inherit" variant="h5">
-                  {title}
-                </Typography>
               </Grid>
               <Grid item>
                 <Button className={classes.button} variant="outlined" color="inherit" size="small">

@@ -44,7 +44,6 @@ class AdminHtml extends React.Component<AdminHtmlProps> {
                 open={this.props.mobileOpen}
                 title={AppConfig.title}
                 subTitle="Project Overview"
-                active={this.props.activePage}
               />
             </Hidden>
             <Hidden xsDown implementation="css">
@@ -54,7 +53,6 @@ class AdminHtml extends React.Component<AdminHtmlProps> {
                 variant="permanent"
                 title={AppConfig.title}
                 subTitle="Project Overview"
-                active={this.props.activePage}
               />
             </Hidden>
           </nav>
