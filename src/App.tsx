@@ -10,6 +10,7 @@ import HomePage from "./pages/HomePage";
 import LogInPage from "./pages/LogInPage";
 import {Provider} from "react-redux";
 import AdminHtml from "./layouts/AdminHtml";
+import LogOutPage from "./pages/LogOutPage";
 
 const App: React.FC = () => {
 
@@ -20,9 +21,7 @@ const App: React.FC = () => {
         <ConnectedRouter history={history}>
           <Switch>
             <Route exact path="/login" component={LogInPage}/>
-            <Route exact path="/logout" render={() => (
-              <Redirect to="/"/>
-            )}/>
+            <Route exact path="/logout" component={LogOutPage}/>
             <Route exact path="/">
               <AdminHtml pageTitle="Home">
                 <HomePage/>

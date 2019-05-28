@@ -79,12 +79,6 @@ interface MyFormValues {
   password: string;
 }
 
-interface Values {
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
 type LogInPageProps = LogInPageStateProps & LogInPageDispatchProps & LogInPageOwnProps & WithStyles<typeof styles>;
 
 class LogInPage extends React.Component<LogInPageProps> {
@@ -96,10 +90,10 @@ class LogInPage extends React.Component<LogInPageProps> {
 
   onFormikSubmit(values: MyFormValues, {setSubmitting}: FormikActions<MyFormValues>): void {
     if (values.email === "admin@cm" && values.password === "123") {
-      setTimeout(() => {
-        alert("Logged in " + JSON.stringify(values, null, 2));
-        setSubmitting(false);
-      }, 500);
+      // setTimeout(() => {
+      //   alert("Logged in " + JSON.stringify(values, null, 2));
+      //   setSubmitting(false);
+      // }, 500);
 
       this.props.onLoginClick(values.email);
     }
