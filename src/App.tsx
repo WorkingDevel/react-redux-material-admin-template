@@ -3,20 +3,21 @@ import './App.css';
 import {CssBaseline} from '@material-ui/core';
 import {ThemeProvider} from '@material-ui/styles';
 import theme from "./theme";
-import {Redirect, Route, Switch} from "react-router";
+import {Route, Switch} from "react-router";
+import {ConnectedRouter} from "connected-react-router";
+import store, {history} from "./store";
 import HomePage from "./pages/HomePage";
 import LogInPage from "./pages/LogInPage";
-import {BrowserRouter as Router} from "react-router-dom";
-import store from "./store";
 import {Provider} from "react-redux";
 import AdminHtml from "./layouts/AdminHtml";
 
 const App: React.FC = () => {
+
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline/>
-        <Router>
+        <ConnectedRouter history={history}>
           <Switch>
             <Route exact path="/login" component={LogInPage}/>
             <Route exact path="/logout" render={() => (
@@ -28,7 +29,7 @@ const App: React.FC = () => {
               </AdminHtml>
             </Route>
           </Switch>
-        </Router>
+        </ConnectedRouter>
       </ThemeProvider>
     </Provider>
   );

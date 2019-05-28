@@ -1,17 +1,27 @@
-import {combineReducers, createStore} from "redux";
+import {applyMiddleware, combineReducers, createStore} from "redux";
 import {systemReducer} from "./system/reducers";
-import {devToolsEnhancer} from "redux-devtools-extension";
+import {composeWithDevTools} from "redux-devtools-extension";
 import {adminHtmlReducer} from "./adminHtml/reducers";
+import {createBrowserHistory, History} from "history";
+import {connectRouter, routerMiddleware} from 'connected-react-router'
 
-const rootReducer = combineReducers({
+const rootReducer = (history: History) => combineReducers({
   system: systemReducer,
-  adminHtml: adminHtmlReducer
+  adminHtml: adminHtmlReducer,
+  router: connectRouter(history)
 });
 
-export type AppState = ReturnType<typeof rootReducer>
+export const history = createBrowserHistory();
+
+const rootReducerInstance = rootReducer(history);
+
+export type AppState = ReturnType<typeof rootReducerInstance>
 
 export default createStore(
-  rootReducer,
-  devToolsEnhancer({})
-  //composeWithDevTools()
+  rootReducerInstance,
+  composeWithDevTools(
+    applyMiddleware(
+      routerMiddleware(history),
+    )
+  )
 );
